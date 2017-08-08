@@ -1,0 +1,25 @@
+##Crear 3 variables de 4 entradas. Las variables de nombre
+##facultad(economia, ingenieria, aqrquitectura, derecho)
+##licenciatura(actuaria, ING CIVIL,aerquitectura, DERECHO )
+##calificacion alumnos (6,4,10,8)
+##verificar que tipo de variables son
+##borrar licenciatura y facultad
+## graficar con pie la variable calificacion
+##incorporar los diversos argumentos
+
+fac<- c("economia", "ingenieria", "arquitectura", "derecho")
+lic<- c("actuaria", "ing_civil","arquitectura", "DERECHO" )
+cal_alum <- c(6,4,10,8)
+class(fac)
+class(lic)
+class(cal_alum)
+rm(fac)
+rm(lic)
+lic<- c("actuaria", "ing_civil","arquitectura", "DERECHO" )
+pie(cal_alum, lic, main = 
+      "Grafica de pastel de calificaciones de Licenciaturas",
+    sub= "Fuente: CU",
+    col=c(150,20,435,23),
+    radius=1.0,
+    clockwise = TRUE,
+    lty=5)
