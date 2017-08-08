@@ -1,0 +1,77 @@
+##Crear 3 variables de 4 entradas. Las variables de nombre
+##facultad(economia, ingenieria, aqrquitectura, derecho)
+##licenciatura(actuaria, ING CIVIL,aerquitectura, DERECHO )
+##calificacion alumnos (6,4,10,8)
+##verificar que tipo de variables son
+##borrar licenciatura y facultad
+## graficar con pie la variable calificacion
+##incorporar los diversos argumentos
+
+fac<- c("economia", "ingenieria", "arquitectura", "derecho")
+lic<- c("actuaria", "ing_civil","arquitectura", "DERECHO" )
+cal_alum <- c(6,4,10,8)
+class(fac)
+class(lic)
+class(cal_alum)
+rm(fac)
+rm(lic)
+lic<- c("actuaria", "ing_civil","arquitectura", "DERECHO" )
+pie(cal_alum, lic, main = 
+      "Grafica de pastel de calificaciones de Licenciaturas",
+    sub= "Fuente: CU",
+    col=c(150,20,435,23),
+    radius=1.0,
+    clockwise = TRUE,
+    lty=5)
+
+###################### Vectores #########################
+a<- 2+3 #vector longitud 1
+b<- c(3,4)-c(6,1) #resta de vectores
+c<-c(4,5,6)*c(5,2,1)
+d<- c(1:50, 7,99) #3 entradas con una de 50 puntos
+length(d)
+length(c)
+## operaciones logicas con vectores
+d>=45
+d==50
+d!=35
+
+## sucesiones con operador y funcion 
+help(seq)
+z<- seq(0,30,3)# desde, hasta, de cuanto en cuanto
+z
+seq(10)
+seq(2,10)
+seq(from=2, to=10, by=2)
+class(z)
+
+###################### muestras ############################
+ingreso<- sample(20000:50000,100) ## rango, cuántos, 
+(ingreso<- sample(20000:50000,100)) ## despliega en R en la consola
+ingreso>=40000
+
+### vector llamado ingreso1 con valores mayores a 40,000
+is(ingreso)
+ingreso1<-ingreso>=40000
+(ingreso1<-ingreso>=40000)
+
+#despliega automaticamiente el valor 
+aleatorios<- sample (1:10,20, replace=TRUE) # RANGO, CUANTOS, REEMPLAZO
+(aleatorios<- sample (1:10,20, replace=TRUE))
+## Para selecconar la posicion de un vector 
+ingreso[50]
+ingreso[73]
+ingreso[30:43]
+ingreso[ingreso>40000]
+ingreso[ingreso<22000]
+ingreso[seq(20,50,10)]
+ingreso[ingreso>20000 & ingreso<30000]
+
+####################### repetir #####################
+ss<- c(5,-7,9)
+rr<- rep(ss,times=5)
+rr
+
+
+###### ejercicio
+
