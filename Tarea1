@@ -1,0 +1,25 @@
+###################### ejercicio matrices########
+##### 1) crear una matriz con la funciÃ³n dim() de 4 columnas 
+#y 5 renglones, ##esta matriz esta basada en un vector que contiene
+#estos 
+#datos 11:31 
+## el nombre de los renglones es el siguiente (toluca, 
+#pachuca, gdl, mty)
+## el nombre de las columnas es (escuela1, escuela2, escuela3, 
+#escuela4, escuela5)
+## Incorporar el nombre a los renglones y columnas de la matriz
+## identificar el dato de la escuela 3 de toluca, de la escuela 5 de gdl y la escuela 1 de pachuca
+###### 2) crear con la funciÃ³n matrix una matriz de 6 renglones
+## y 3 columnas.... y preguntar por el dato de la matriz en el 
+## renglon 3 y columna 3
+e<- 11:30
+dim(e)<-c(5,4)
+colnames(e)<-c("toluca","pachuca","gld","mty")
+rownames(e)<-c("escuela1","escuela2","escuela3","escuela4","escuela5")
+e["escuela3","toluca"]
+e["escuela5","gld"]
+e["escuela1","pachuca"]
+#2
+g<- matrix(20:37,nrow=6, ncol=3)
+View(g)
+g[3,3]
