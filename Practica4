@@ -1,0 +1,64 @@
+#### ejercicio rbind, cbind ###
+
+# para pegar un renglon a la matriz z
+e<- rbind(e, c(4,5,6,7))
+View(e)
+rownames(e)<-c("escuela1","escuela2","escuela3","escuela4","escuela5","escuela6")
+# para pegar un renglon a la matriz z
+e<- cbind(e, c(14,25,36,47,58,69))
+View(e)
+colnames(e)<-c("toluca","pachuca","gld","mty","joco")
+### CAMBIAR un solo dato
+e["escuela1","joco"]<-28
+e
+edit(e)
+### para multiplicar las matrices se isa i%*%j
+### para la transpuesta de una matriz se utiliza t(A)
+
+
+####### DATA FRAME
+nombres<-c("sergio","juan","roca","jessica")
+edad<- c(30,43,21,18)
+altura<- c(170,165,175,172)
+salario <-c(3000, 4500,2200,4300)
+basem<- data.frame(nombres,edad,altura,salario)
+View(basem)
+### cambiar el dato de la base
+basem[4,3]<-178
+
+### multiplicar una columna de la base de datos
+basem$salario*2.2->basem$salario
+basem$salario<-basem$salario*2.2
+basem
+## pegar columnas en bases
+peso<-c(83.2,75.2,69.3,70.5)
+basem<- data.frame(nombres,edad,altura,salario,peso)
+basem
+basem$peso<-basem$peso*1.2
+basem$salario<-basem$salario*2.2
+basem
+
+### redondeo
+basem$peso<-round(basem$peso,1)
+
+### incorporar otra variable IMPORTANTE
+basem$escol<- c("prepa","lic","ninguno","prim")
+
+## incorporarla variable sexo
+basem$sexo<-c(1,1,1,2)
+
+#table sexo, tabla  de frecuencia 
+table(basem$sexo)
+### A partir de la linea 52 todo que se MANDE a LLAMAR es se la basex y quitar
+attach(basem)
+detach(basem)
+
+############ PAQUETERIOAS O LIBRERIAS ############
+install.packages("foreign") ### importar documentos como excel, bajar de internet
+install.packages("questionr") ### expandir frecuencias de datos 
+install.packages("car") # regresion
+
+### para mandar a llamar library() required()
+library(foreign)
+library(questionr)
+require(car)
