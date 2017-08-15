@@ -1,0 +1,36 @@
+library(foreign)
+##### bajar la base de datos
+## temporal<- tempfile()
+# download.file(pagina, temporal)
+#files=unzip(temporal, list=T)$Name
+#unzip(temporal)
+
+mti2015<-read.dbf("/Users/gemaitzeltorresmejia/Desktop/mti2015_05_17_sdem_precodificado.DBF")
+table(mti2015$SEX)
+require(questionr)
+### expandir la muestra y ponderar por la variable
+wtd.table(mti2015$SEX, weights = mti2015$FAC_MTI)
+View(mti2015$FAC_MTI)
+ls(mti2015)
+## sumar
+sum(mti2015$FAC_MTI)
+#### FAC_MTI factor de ponderacion
+table(mti2015$R_DEF_ENOE)
+## sabe leer y escribir
+table(mti2015$CS_P12)
+
+####leer y escribir de TODA la poblacion
+wtd.table(mti2015$CS_P12, weights = mti2015$FAC_MTI)
+### EDDES DE LOS QUE NO SABEN LEER
+wtd.table(mti2015$EDA, mti2015$CS_P12, weights = mti2015$FAC_MTI)
+### datos solo del estado de mexico
+edomex<-subset(mti2015, mti2015$ENT == 15) ## subconjunto
+edomexmuy<-subset(mti2015, mti2015$ENT == 15 & mti2015$SEX==2)
+View(edomexmuy) ## mujeres solo del edomex
+
+aguazaca<-subset(mti2015, mti2015$ENT=="01" | mti2015$ENT=="32")
+table(aguazaca$ENT)
+ ### caracter a numerica
+as.numeric(mti2015$ENT)
+aguazaca1<-subset(mti2015, mti2015$ENT==01 | mti2015$ENT==32)
+table(aguazaca1$ENT)
