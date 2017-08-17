@@ -1,0 +1,36 @@
+## BAJAR ARCHIVOS DIRECTOS
+temporal<-tempfile()
+download.file("http://www.beta.inegi.org.mx/contenidos/proyectos/enchogares/modulos/mti/2015/microdatos/mti2015_bases_conapo_dbf.zip",temporal)
+files=unzip(temporal, list=TRUE)$Name
+unzip(temporal, files=files[grepl("dbf",files)])
+library(foreign)
+mti15<- data.frame(read.dbf("mti2015_05_17_sdem_precodificado.DBF"))
+files ### mandar llamar
+class(mti15$ENT)
+mti15$ENT<-as.numeric(as.character(mti15$ENT))
+### etiquetar: poner nombre a las varialbes
+table(mti15$CS_P15)
+mti15$CS_P15<-factor(mti15$CS_P15, levels = c(1,2,3,4),
+                     labels = c("primaria","secundaria","preparatoria","no sabe"))
+mti15$RAMA1<-factor(mti15$RAMA, levels = c(1,2,3,4,5,6,7),
+                     labels = c("Agropecuario","Construccion","Industria manufacturera",
+                                "Comercio","Servicios","Otros","No especificado"))
+table(mti15$RAMA)
+
+ #### Recodificar el nombre de la variable
+class(mti15$RAMA)
+mti15$RAMA2<-as.numeric(mti15$RAMA)
+mti15$RAMA3[mti15$RAMA2 ==1]<- 1
+mti15$RAMA3[mti15$RAMA2 ==2]<- 2
+mti15$RAMA3[mti15$RAMA2 ==3]<- 2
+mti15$RAMA3[mti15$RAMA2 ==4]<- 3
+mti15$RAMA3[mti15$RAMA2 ==5]<- 3
+mti15$RAMA3[mti15$RAMA2 ==6]<- 4
+mti15$RAMA3[mti15$RAMA2 ==7]<- 4
+
+### Etiquetar
+mti15$RAMA4<-factor(mti15$RAMA3, levels = c(1,2,3,4),
+                     labels = c("Primario","Secundario","Terciario","N E"))
+table(mti15$RAMA3)
+
+install.packages("plyr")
