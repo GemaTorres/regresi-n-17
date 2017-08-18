@@ -1,0 +1,35 @@
+######### DIA 7 ###############
+
+#### CAMBIAR EDA
+## EDA base original
+### EDAD recodificacion
+### EDAD1 rangos
+
+mti15$EDA<-as.numeric(as.character(mti15$EDA))
+mti15$EDAD[mti15$EDA ==5 | mti15$EDA==6 | mti15$EDA==7]<-1
+mti15$EDAD[mti15$EDA==8 | mti15$EDA==9 | mti15$EDA==10 | mti15$EDA==11]<-2
+mti15$EDAD[mti15$EDA==12 | mti15$EDA==13 | mti15$EDA== 14 ]<-3
+mti15$EDAD[mti15$EDA==15 | mti15$EDA==16 | mti15$EDA==17 ]<-4
+
+mti15$EDAD<-factor(mti15$EDAD, levels = c(1,2,3,4),
+                    labels = c("Niños","Preado","Ado","Joven"))
+table(mti15$EDAD)
+table(mti15$EDA)
+class(mti15$EDAD)
+require(questionr)
+t<-wtd.table(mti15$EDAD, weights = mti15$FAC_MTI)
+## por rango
+mti15$EDAD1 [mti15$EDA >=5 & mti15$EDA<=7]<-1
+mti15$EDAD1 [mti15$EDA >=8 & mti15$EDA<=11]<-2
+mti15$EDAD1 [mti15$EDA >=12 & mti15$EDA<=14]<-3
+mti15$EDAD1 [mti15$EDA >=15 & mti15$EDA<=17]<-4
+table(mti15$EDAD1)
+mti15$EDAD1<-factor(mti15$EDAD1, levels = c(1,2,3,4),
+                   labels = c("Niños","Preado","Ado","Joven"))
+
+###### EXPORTAR A EXCEL ####
+write.csv(t, file= "Practica1.csv")
+t
+#### serobles99@gmail.com
+
+### tarea: graficar con barras la variable EDAD y exportarla a una PDF y mandarla 
