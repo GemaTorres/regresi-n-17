@@ -1,0 +1,6 @@
+barplot(q, width = 1, space = NULL, names.arg = NULL,
+        legend.text = NULL, beside = FALSE, horiz = FALSE,
+        col=c("mediumorchid4","mediumorchid3","mediumorchid2","mediumorchid1"), border = par("fg"),
+        main = "EDAD NIÑOS DE 5 A 17 AÑOS", sub = "Encuesta Infantil 2015", xlab = "Categorias", ylab = "Frecuencia Muestral",
+        xlim = NULL, ylim = NULL,
+        axes = TRUE, axisnames = TRUE, plot = TRUE)
