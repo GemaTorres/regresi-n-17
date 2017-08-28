@@ -1,0 +1,11 @@
+######               PROBLEMA AR              ########
+##Encontrar la relacion entre años estudiados y promedio de palabras en su vocabulario.
+## Hipotesis: entre mas años estudiados se tiene mayor vocabulario
+## Datos: 
+## @ años estudiados
+## @ promedio de palbras
+## En este caso  Y seria promedio de palabras y X seria años estudiados
+y<- c(0.40, 0.42 ,0.48 ,0.51 ,0.57 ,0.6 , 0.7, 0.75, 0.75, 0.78)
+x<- c(11, 10, 13, 13.5, 14, 12, 16, 17, 15.8, 17.5)
+plot(x,y,  main = "Diagrama de dispesion", sub = "Relacion entre años estudiados y nivel de vocabulario",
+     xlab = "Años estudiados", ylab = "Nivel de vocabulario")
