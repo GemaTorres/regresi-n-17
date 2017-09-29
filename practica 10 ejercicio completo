@@ -1,0 +1,63 @@
+x<- c(170, 172, 173, 174, 174, 175, 176, 177, 180,
+      180, 180, 180, 180, 181, 181, 182, 182, 182, 182,
+      184, 184, 185, 186, 188)
+y<- c(.84, 1.31, 1.42, 1.03, 1.07, 1.08, 1.04, 1.8, 1.45,
+      1.68, 1.61, 2.13, 2.15, .84, 1.43, .98, 1.81,
+      1.92, 2.68, 1.49, 2.52, 3.00, 1.87, 3.08)
+## 1) determine la ecuación de la recta de regresion estimada
+## 2) calacule una estimación puntual dle salto horizontal
+## promedio cuando la estructura de la persona es 182 
+## 3) calcule los valores de los residuos de min cuadrados
+## de las 4 observaciones con las cuales la estructura es de 182
+## 4) que proporcion de la valoracion observada en el salto
+## horizontal es atribuida a la relacion de regresion linela simple
+
+## 1) determine la ecuación de la recta de regresion estimada
+promx<- sum(x)/length(x)
+promy<- sum(y)/length(y)
+
+sxy<-sum(x*y)-sum(x)*sum(y)/length(x)
+sxx<- sum(x^2)-((sum(x))^2)/length(x)
+b1<- sxy/sxx
+b0<-(sum(y)-sum(b1*x))/length(x)
+## funacion lm
+mdlo1<- lm(y~x)
+summary(mdlo1)
+
+## 2) calacule una estimación puntual dle salto horizontal
+## promedio cuando la estructura de la persona es 182 
+
+estpunt<- b0+182*b1
+estpunt
+# estimacion puntual es sustituir el 182, si ua persona mide 182, se espera que brinque 1.91
+
+
+## 3) calcule los valores de los residuos de min cuadrados
+## de las 4 observaciones con las cuales la estructura es de 182
+# "y" menos "y" ajustada, dustancia de la recta a los valores
+resd1<- .98-estpunt
+resd2<- 1.81-estpunt
+resd3<- 1.92-estpunt
+resd4<- 2.68-estpunt
+
+## 4) que proporcion de la valoracion observada en el salto
+## horizontal es atribuida a la relacion de regresion linela simple: es la r cuadrada
+
+yp<-b0+b1*x
+resi<- y-yp
+
+### SIGMA CUADRADA ###
+sse<- sum(resi^2)
+sst<- sum((y-promy)^2)
+## r cuadrada
+rsqrt<- 1-(sse/sst)
+
+
+####jalar valores 
+names(mdlo1)
+mdlo1$coefficients ## b0 y b1
+mdlo1$coefficients[1] # b0
+
+##plt
+plot(y~x,xlab="estatura", ylab="salto horizontal" ,xlim=c(160,190), ylim=c(.88,3.2), main="grafica de diagrama de dispersion")
+abline(mdlo1)
