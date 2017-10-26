@@ -1,0 +1,79 @@
+############ MRM ################
+# etatura<- c(1.2, 1.23, 1.19, 1.32, 1.28, 1.22, 1.17, 1.29, 1.33, 1.15)
+# nivel economico<- c(110, 130, 108, 167, 156, 115, 104, 138, 170, 107)
+# Queremos comprobar la hipotesis que entre mayor ingreso de la familia 
+# hay una mayor estatura en los niños
+
+esta<- c(1.2, 1.23, 1.19, 1.32, 1.28, 1.22, 1.17, 1.29, 1.33, 1.15)
+eco<- c(110, 130, 108, 167, 156, 115, 104, 138, 170, 107)
+mod1<- lm (esta~eco)
+
+#### 1.BONDAD DE AJUSTE Y NANALISIS DE VARIANZA ######
+#Con la bondad de ajuste verificamos la calidad de modelo al interpretar la variale dependiente
+#para esos se utiliza la tabla anova
+anova(mod1)
+
+#en este caso la variabilidad explicada del modelo es .033022= SSM
+# se revisa la SSR= 0.0031
+# revisando los valores del summary y el estadistico F es mayor a 1 y
+# p-value <.05 con estas revisiones se peude mencionar que se rechaza la hipotesis
+# nula de F=1 y se peude establecer un modelo.
+
+##### 2.REVISAR R2 MULTIPLE #####
+summary(mod1)
+# Al rededor de 91% de la variabilidad de la estructura es explicada por la recta ajustada
+
+###### 3. ANALISIS DE COEFICIENTES #####
+# B0  es 0.93 y B1 es 0.0023, si la variable ingreso incrementa en un peso,
+# la estatura del niño incrementa 0.0023
+summary(mod1)$coefficients
+
+##### 4.DIAGNOSTICO DEL MODELO ####
+base1<- data.frame(eco,esta)
+base1$fitted.mod1 <- fitted(mod1) #### Valores ajustados
+base1$residuals.mod1<- residuals(mod1) ## resisduos del modelo
+base1$rstudent.mod1<- rstudent(mod1) # residuos estudentizados
+
+## Rsta variable SSE se utilizan para comparobar los supuestos 
+
+##### 5.PRUEBAS #####
+
+######### a) Supuesto de Normalidad ####
+# Es que los residuos tengan una dist normal
+# Para conocer la normalidad se utiliza la prueba de Shapiro
+# para analizar los residuos
+
+shapiro.test(base1$rstudent.mod1)
+# Prueba de hipotesis Shapiro test
+# H0: la muestra tiene una dist normal
+# H1: la muestra no tiene dist normal
+# Si pvalue > 0.05 => no se rechaza h0
+# Tenemos un pvalue de 0.8172 no se rechaza la hipotesis nula
+# poe lo tanto hay normalidad
+
+## Ahora veremos el resultado en una grafica
+x11() # abre una ventana
+qqnorm(base1$rstudent.mod1, main = "Normal (0,1)") # se obtiene la grafica de 
+qqline(base1$rstudent.mod1)
+
+######### b) Ahora vamos a revisar a Homogeniedad de las Varianzas (homocedasticidad)
+# Para la homogeniedad se rquiere una libreria que se llama lmtest
+# debido a que esta tiene que aplicar la prueba de Breusch- pagan test
+
+install.packages("lmtest")
+require(lmtest)
+bptest(mod1)
+
+# en estar prueba esperamos que haya homogeniedad de la varizanza 
+# para esto tenemos que tener un pvalue mayor a 0.05 por lo que
+# para mod1 se puede decir que hay homogeniedad en la variabe
+
+## c)Prueba de Autocorrelacion o independencia
+
+# en este caso se utiliza la prueba de Durbin Watson 
+# para esta prueba se utiliza
+dwtest(mod1, alternative= "two.sided")
+
+# en este caso al igual que las demas se acepta la hipotesis nula
+# debido a que tenemos pvalue mayor a 0.05, esto quiere decir que 
+# no hay autocorrelacion en los residuos
