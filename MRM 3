@@ -1,0 +1,115 @@
+######################### EJERCICIO 01 ################################
+# Eun una financiera se requiere evaluar los corredores de bolsa de diferentes empresas, la oferta
+# y desempeñode cadacorredor se evalua en 6 areas, empleando para cada una de las areas una escala de
+# 0 a 5. Tres de las areas son evaluadas son ejecucion en la operacion, facilidad de uso, gama de 
+# ofertas. Un 5 es la major calificacion en las diferentes areas. En los sig datos se presentan las
+# puntuaciones obtenidas
+
+corredor <- c("wall st", "etrade1", "etrade2", "pre trade", "track",
+              "wtaer house", "brown","mr america", "merill lynch", "strong founs")
+operacion <- c(3.7, 3.4, 2.5, 4.8, 4, 3, 2.7, 1.7, 2.2, 1.4)
+uso <- c(4.5, 3, 4, 3.7, 3.5, 3, 2.5, 3.5, 2.7, 3.6)
+calftotal <- c(4, 3.5, 3.5, 3.5, 3.5, 3.5, 3, 3, 2.5, 2)
+gama <- c(4.8, 4.2, 4, 3.4, 3.2, 4.6, 3.3, 3.1, 3, 2.5)
+
+# a) dterminar la ecuacion de recta estimada que se puede usar para predecir 
+#    las califiaciones totales segun las evaluaciones obtenidad
+# b) emplee la prueba F para determinar la sig global de la relaciom
+#    el nivel de sinificancia que requiere es de 95% ¿cual es su conclusion?
+# c) estime cualquiera de las var indep que no sea significativa para la ec
+#    de regr estimada.¿cual es la ecuacion de reg estimada que recomienda?
+#    compare las r2 de los modelos
+
+### SOLUCION
+
+# a) La ecuacion del problema es:
+# 0.3451+ 0.1324x1+0.45852 x2+ 0.25482x3
+fin <- data.frame(operacion, uso, calftotal, gama)
+modfin<- lm(calftotal~operacion+ uso+ gama)
+summary(modfin)
+## en este caso se revisa la r2 ajustada, debido a que es mrm
+# y la r2 tiene un valor de 0.82 lo que implica que la recta de regresion
+# explica el 82.84% la variabilidad del modelo
+
+#b)
+
+# Despues de que tengamos una r2 ajustada aceptable, se analiza
+# el estadistico F, para saber la bondad de ajuste y la calidad
+# de modelo que estamos aplicando
+
+anova(modfin)
+
+# para la primera variable se muestra significativo la primer variable sale significativa, y gama
+
+##############################
+# Nuevo modelo sin uso que no es significativa en el modelo
+
+mod1<-  lm(calftotal~operacion+ gama)
+summary(mod1)
+
+anova(mod1)
+## Comparar que modelo es mejor
+# Este modelo tiene una r2 de 83.11% lo cual dice que el modelo es mejor 
+# que el anterior aunque no es muy viable
+
+#Analisis de supuestos
+fin <- data.frame(operacion, calftotal, gama)
+names(mod1)
+fin$fitted.values <- fitted(fin)
+fin$residuals.mod1 <- residuals(mod1)
+fin$rstudents.mod1 <- rstudent(mod1)
+
+# 1. Normalidad
+shapiro.test(fin$rstudents.mod1)
+
+# En este caso esperamos un p-value mayor a 0.05 en el cual si se obtiene, por lo que podemos
+# decir que se acepta el supuesto de la normalidad 
+
+#1.1 Graficos
+
+qqnorm(fin$rstudents.mod1)
+qqline(fin$rstudents.mod1)
+
+# 2. Homocedasticidad del supuesto
+install.packages("lmtest")
+require(lmtest)
+bptest(mod1) 
+
+# 0.11> 0.05 por lo que si cumple el supesto
+
+# 3. Supuesto de independecia o correlacion
+
+# en este caso se palica la prueba de durbin watson, esta prueba se evalua de dos formas, por un lado 
+# el valor de durbin watson tiene que estar entre 1.5 y 2.5, ademas de este valor hay que observar 
+# el p-value que tiene que ser mayor a 0.05 para que cumpla el supuesto de la independencia de los
+# residuos
+dwtest(mod1, alternative = "two.sided")
+
+# p- value > 0.05 porlo que se dice que este modelo cumple el supuesto
+
+
+##################### EJERCICIO 02 ######################
+
+# Plantear un MRM de minimo 4 variables indep, a este modelo que se plantee se realizara lo sig:
+# 1) analiza la anova para conocer la bondad de ajsute
+# 2) a traves de los coeficientes detectar las var indep no significativas
+# 3)analizar la r2 para conocer la variabilidad del modelo
+# 4) en caso de haya alguna var indep no significativa eliminar la var y diagnosticar el modelo
+#    a traves de los supuestos 
+
+# En un concurso de freestyle motocross se analiza quien podria ganar la siguiente copa, para ello 
+# de los 5 particicipantes se toma el promedio de cada categoria y su promedio final
+
+part<- c("Andre Villa","Eigo Sato", "Matt Rebeut", "Dani Torres", "Levi Sherwood")
+execucion <-c(.7, .89, .94, .79, .92, .82, .43, .76, .35, .67)
+estilo <- c(.79, .8, .72, .85, .8, .53, .69, .43, .83, .79)
+energia <- c(.69, .9, .76, .84, .91, .66, .75, .79, .8, .75)
+curso <- c(.75, .95, .78, .86, .85, .65, .78, .85, .85, .76)
+cal<- c(.71, .93, .77, .85, .88, .65, .77, .82,.83, .76)
+cor (cal, execucion, estilo, energia, curso)
+cor.test(cal, execuacion, estilo, energia, curso)
+fin <- data.frame(execucion, estilo, energia, curso, cal)
+modfin<- lm(cal~execucion + estilo + energia + curso)
+ summary(modfin)
+
+
