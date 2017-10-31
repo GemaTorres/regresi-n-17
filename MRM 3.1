@@ -1,0 +1,58 @@
+##################### EJERCICIO 02 ######################
+
+# Plantear un MRM de minimo 4 variables indep, a este modelo que se plantee se realizara lo sig:
+# 1) analiza la anova para conocer la bondad de ajsute
+# 2) a traves de los coeficientes detectar las var indep no significativas
+# 3)analizar la r2 para conocer la variabilidad del modelo
+# 4) en caso de haya alguna var indep no significativa eliminar la var y diagnosticar el modelo
+#    a traves de los supuestos 
+
+# En un concurso de freestyle motocross se analiza quien podria ganar la siguiente copa, para ello 
+# de los 5 particicipantes se toma el promedio de cada categoria y su promedio final
+
+part<- c("Andre Villa","Eigo Sato", "Matt Rebeut", "Dani Torres", "Levi Sherwood")
+execucion <-c(.7, .89, .94, .79, .92, .82, .43, .76, .35, .67)
+estilo <- c(.79, .8, .72, .85, .8, .53, .69, .43, .83, .79)
+energia <- c(.69, .9, .76, .84, .91, .66, .75, .79, .8, .75)
+curso <- c(.75, .95, .78, .86, .85, .65, .78, .85, .85, .76)
+cal<- c(.71, .93, .77, .85, .88, .65, .77, .82,.83, .76)
+cor (cal, execucion, estilo, energia, curso)
+cor.test(cal, execucion, estilo, energia, curso)
+fin <- data.frame(execucion, estilo, energia, curso, cal)
+modfin<- lm(cal~execucion + estilo + energia + curso)
+ summary(modfin)
+ 
+ ### con todas las variavles sale una r2 de 0.9969 y si quitamos execucion
+ #  y estilo queda r2 de 0.9966
+ modfin<- lm(cal~ energia + curso)
+ 
+ fin$fitted.values <- fitted(fin)
+ fin$residuals.mod1 <- residuals(modfin)
+ fin$rstudents.mod1 <- rstudent(modfin)
+ 
+ # 1. Normalidad
+ shapiro.test(fin$rstudents.modfin)
+ 
+ # En este caso esperamos un p-value mayor a 0.05 en el cual si se obtiene, por lo que podemos
+ # decir que se acepta el supuesto de la normalidad 
+ 
+ #1.1 Graficos
+ 
+ qqnorm(fin$rstudents.modfin)
+ qqline(fin$rstudents.modfin)
+ 
+ # 2. Homocedasticidad del supuesto
+ require(lmtest)
+ bptest(modfin) 
+ 
+ # 0.34> 0.05 por lo que si cumple el supesto
+ 
+ # 3. Supuesto de independecia o correlacion
+ 
+ # en este caso se palica la prueba de durbin watson, esta prueba se evalua de dos formas, por un lado 
+ # el valor de durbin watson tiene que estar entre 1.5 y 2.5, ademas de este valor hay que observar 
+ # el p-value que tiene que ser mayor a 0.05 para que cumpla el supuesto de la independencia de los
+ # residuos
+ dwtest(modfin, alternative = "two.sided")
+ 
+ # p- value > 0.05 porlo que se dice que este modelo cumple el supuesto
