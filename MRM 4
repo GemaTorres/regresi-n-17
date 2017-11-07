@@ -1,0 +1,132 @@
+#### Richie ######
+capa<- c(4330, 5500, 5500, 4700, 5200,5500, 4700, 5500, 5800, 5000)
+# var2 calidad
+cali<- c(2, 3, 4, 3, 4, 4, 4, 5, 5, 5)
+#var 3 dependiente
+precio<- c(190, 219, 249, 249, 250, 340, 289, 395, 439, 525)
+# lo primero que hay que hacer es declarar un data frame con las 3 variables
+mochil<- data.frame(precio, capa, cali)
+
+mod1<- lm(precio~cali+ capa)
+mod2<- lm(precio~cali)
+mod3<- lm(precio~ capa)
+#### la mas cercana a cero es el mejor modelo
+AIC(mod1)
+BIC(mod1)
+### en este caso es el 2
+AIC(mod2)
+BIC(mod2)
+
+AIC(mod3)
+BIC(mod3)
+
+##### PROFE #####
+# Pretendemos seleccionar el mejor subconjunto de predictores.
+# En este caso para la MRM tenemos dos variables independientes,
+# (calidad y capacidad) por lo que se propone comparar 3 modelos
+# con la finalidad de comparar el princiio de parsinomia , conocer
+# variables independientes innercesarias evitendo multicolinealidad
+# es decir, que tiene muchas variables intentando explicar el modelo 
+# ante estas tres variables se pueden comparar tres modelos 
+
+#(precio~cali+ capa)
+#(precio~cali)
+#(precio~ capa)
+
+# como selecccionar el mejor modelo?
+
+###### CRITERIO DE INFORMACION AKAIKE (AIC)
+
+#El problema de utilizar R2 para comparar modelos es muchos casos 
+# es que al añadir muchas variables, esta medida crece.
+# Si estamos diciendo cual de todos los modelos ajusta mejor a los
+# datos, el modelo con mas predictores siempre sera el mejor ajustado
+
+#Para evitar esto se utiliza AIC, una medida de ajuste que penaliza
+# el modelo por tener mas variables, viene definido por
+
+# AIC= (n)(log(SCR/n))-2k
+# SCR: suma de cuadrados residueales
+# n: numero de casos en el modelo
+# k: numero de variables independientes
+
+# El criterio que se utiliza para el AIC es elegir el modelo que 
+# tenga menor valor de AIC, es decir, esperamos un AIC mas pequeño
+#El AIC nos va a ayudar a decidir sobre la comparacion del modelo
+
+# El modelo mas recpemdado es el step by step
+# para R se usa la funcion step()
+# Dentro del modelo step by step hay 3 modalidades
+#  1) forward... parte del coeficiente B0 y de ahi va probando
+# las variables indepenedientes para ver cual es la que mas aporta al modelo
+
+# 2) backward... R empieza con todas las avriables inde y estudia sis el AIC 
+#    baja cuando hay cambios de variables
+
+# 3) both... empieza como el fordward la diferencia es que se rlizan test 
+#    para conocer el predictor mas util
+
+# el modelo mas recoemdado es el backward porque tiene un efecto
+# represor que permite probRCUANDO UNA var tiene influencia solo si otra
+# var se mantiene constante vamos a calcular el modelo con las
+# dos variables 
+
+mochil<- data.frame(precio, capa, cali)
+
+mod1<- lm(precio~cali+ capa)
+summary(mod1)
+ 
+# Error estandar residual es alto porque debe ser cercanoa cero
+# f-test se espera mayor a 1 entonces es un buen modelo, bondad de ajuste
+# p- value menor a 0.05
+
+step(mod1, dierection="backward")
+# aqui podemos ver que se analizaron dos modelos
+# 1) precio ~ cali + capa con AIC=83.9
+# 2) precio ~ cali con AIC=83.51 ······ esta es la que deberiamos elegir
+
+# ahora vamos a probar con el método both 
+
+step(mod1, dierection="both")
+# teneos un rsultado igual que el backward por la forma qu se construye el
+# motodo
+
+# ahora con el modelo forward
+step(mod1, dierection="forward")
+# mejor modelo precio ~ cali con AIC=83.51 
+# desecha las variables basura 
+
+help(datasets)
+library(help = "datasets")
+require(datasets); data(swiss): ?swiss
+
+###### EJERCICIO
+## escoger 3 variables
+class(swiss)
+swiss
+
+mod1<- lm (Fertility ~ Education+ Catholic + Infant.Mortality, data = swiss)
+summary(mod1)
+
+# Prueba T
+# como las tes variables tienen un valor de t menor a 0.05 entonces
+# decimos que todas tienen nivel de sisgnficancia en el modelo.
+
+# Error residual estandar
+# es un error muy cercano a cero por lo que decimos que es un buen modelo
+
+# R2 ajustada
+# el modelo tiene el 63.9% de variabilidad
+
+# F 
+# F es mayor a 1 por lo que es buena 
+
+step(mod1, dierection="backward")
+step(mod1, dierection="both")
+step(mod1, dierection="forward")
+
+# Se queda con el modelo Fertility ~ Education + Catholic + Infant.Mortality con un AIC=193.29
+# De otros modelos:
+# Fertility ~ Infant.Mortality 202.18
+# Fertility ~ Education 223.46
+# Fertility ~ Catholic 203.25
