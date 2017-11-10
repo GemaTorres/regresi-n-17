@@ -1,0 +1,159 @@
+mod1<- lm(formula = Fertility ~ Education + Catholic + Infant.Mortality + 
+            Agriculture, data = base)
+summary(mod1)
+# Residual standar error es bueno porque es cercano a cero 
+# r2 ajustado es buena porque arriba de 60% es un buen modelo
+
+# con la fianlidad de observar aspectos basicos como la r2 ajustada nos permite conocer la variabilidad
+# explicada del modelo, los errores de los residuos al estandar 7.168.
+# La sisgnificancia de las variables con es estadistico T, que si esta aportando al modelo
+# El estadistico F y el p value para ver el ajuste del modelo (Bonadad de ajuste)
+
+# La prueba de hipotesis que se aplica en el estadistico F es
+# H0: b0, b1,..., bk=0
+# Ha: al menos un Bj es diferente de cero, al menos uno es significativo
+# Aqui esperamos rechazar la hipotesis nula por lo p- value debe ser 
+# <0.05 (rechaza la hipoteis nula) y ademas F debe ser >1
+
+# Al parecer tenemos un buen modelo 
+
+##### PRUEBAS FORMALES MRM
+
+
+# 1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de 0.4812 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo si cumple con el supuesto de autocorr
+
+# 3. Independencia
+
+dwtest(mod1, alternative = "two.sided")
+#H0: los errores son ndependientes (no rechazar p-value mayor a 0.05)
+# un p value menor a 0.05 o un DW [1.5 , 2.5]
+# en este caso esta en la frontera por lo cual decimos que si cumple
+# porque es de 1.465
+
+##### Interpretacóion de coeficientes
+
+# Para la puueba T H0: Coef =0; H1: Coef !=0
+# p value menor a 0.05
+
+# El modelo elegido estima que hay una disminucion de 0.15
+# en la tasa de fucundiad por cadaaumento de 1% de hombres 
+# involucrados en la agricultura menteniendo contrantes las
+# demas var independientes
+
+# El modelo elegido estima que hay una disminucion de 0.98
+# en la tasa de fucundiad por cada aumento de 1% de la educacion 
+# menteniendo contrantes las demas var independientes
+
+# El modelo elegido estima que hay aumento de 0.12
+# en la tasa de fucundiad por cada aumento de 1% de la poblacion que sea catolica  
+# menteniendo contrantes las demas var independientes
+
+# El modelo elegido estima que hay aumento de 1.07
+# en la tasa de fucundiad por cada aumento de 1% de la mortalidad infantil 
+# menteniendo contrantes las demas var independientes
+
+
+#### EJERCICIO
+
+require(stats)
+base<- data.frame(Seatbelts)
+cor(base)
+
+nulo<- lm(drivers~ 1, data = base)
+completo <- lm(drivers~ ., data = base)
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+
+mod1<- lm(formula = drivers ~ DriversKilled + front + rear + law + VanKilled, 
+          data = base)
+summary(mod1)
+
+# Residual standar error no es bueno porque no es cercano a cero es de 103
+# r2 ajustado es buena porque arriba de 60% es un buen modelo con 87%
+
+
+# La sisgnificancia de las variables con es estadistico T, que si esta aportando al modelo
+# El estadistico F y el p value para ver el ajuste del modelo (Bonadad de ajuste)
+# las variables que arrojo el aic solo una no sale significativa
+# Vankilled no aparece significaica con un p vale mayor
+
+# La prueba de hipotesis que se aplica en el estadistico F es
+# H0: b0, b1,..., bk=0
+# Ha: al menos un Bj es diferente de cero, al menos uno es significativo
+# Aqui esperamos rechazar la hipotesis nula por lo p- value debe ser 
+# <0.05 (rechaza la hipoteis nula) y ademas F debe ser >1
+
+# Al parecer tenemos un buen modelo 
+
+##### PRUEBAS FORMALES MRM
+
+
+# 1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de 0.4812 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
+# pasa la prueba con un p value de 0.99
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo no cumple con el supuesto de autocorr
+# ya que el p- value es de 0.0298
+
+
+
+##### PRUEBA 2 QUITANDO LAW VANKILLED
+
+
+mod1<- lm(formula = drivers ~ DriversKilled + front + rear, 
+          data = base)
+summary(mod1)
+
+# Residual standar error no es bueno porque no es cercano a cero es de 103
+# r2 ajustado es buena porque arriba de 60% es un buen modelo con 87%
+
+
+# La sisgnificancia de las variables con es estadistico T, que si esta aportando al modelo
+# El estadistico F y el p value para ver el ajuste del modelo (Bonadad de ajuste)
+# las variables que arrojo el aic solo una no sale significativa
+# Vankilled no aparece significaica con un p vale mayor
+
+# La prueba de hipotesis que se aplica en el estadistico F es
+# H0: b0, b1,..., bk=0
+# Ha: al menos un Bj es diferente de cero, al menos uno es significativo
+# Aqui esperamos rechazar la hipotesis nula por lo p- value debe ser 
+# <0.05 (rechaza la hipoteis nula) y ademas F debe ser >1
+
+# Al parecer tenemos un buen modelo 
+
+##### PRUEBAS FORMALES MRM
+
+
+# 1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de 0.9477 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
+# pasa la prueba con un p value de 0.99
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo no cumple con el supuesto de autocorr
+# ya que el p- value es de 0.0064
+
