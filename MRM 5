@@ -1,0 +1,58 @@
+## swiss
+# Medidicion estandarizada de la fecundidad e indicadores socieoeconomicos para cada una
+# de las 47 provincias 
+
+require(stats)
+base<- data.frame(swiss)
+
+#analisis exploratorio
+names(base)
+pairs(base) # grafica las variables por pares para identidficar relaciones
+cor(base)
+
+# propuesta mrs con base en el analisis exploratorio
+regresion1<- lm(Infant.Mortality~Fertility, data = base)
+
+#modedlo propuesto anteriormente
+# se hace con una constante
+# se hace porque se quiere comparar el modelo nulo con el mas completo
+# se toma como una referencia para saber si las variables son significativas
+# ya que si el modelo nulo es mejor que con las variables entonces las variables sirven
+nulo<- lm(Fertility~ 1, data = base)
+summary(nulo)
+
+
+# El punto es como si tuvieran todas las var independientes
+# aun asi se define la independiente
+completo <- lm(Fertility~ ., data = base)
+
+# step: criterio AIC del modelo 
+# nulo: es e modelo mas simple
+# scope: evalua todas las posibilidades desde el nulo hasta el completo 
+# al final te da el mejor modelo
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+summary(completo)
+help(step)
+
+############# Ejercicio
+help(datasets)
+library(help = "datasets")
+require(datasets); data("LifeCycleSavings"); ?LifeCycleSavings
+
+baset<- data.frame(LifeCycleSavings)
+
+names(baset)
+pairs(baset) 
+cor(baset)
+# las que mas correlacion tienen es pop75 con dpi y tambien por el analisis grafico
+
+nulo<- lm(pop75~ 1, data = baset)
+summary(nulo)
+
+completo <- lm(pop75~ ., data = baset)
+
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+# el mejor modelo seria lm(formula = pop75 ~ pop15 + dpi + sr, data = baset)
+# con un AIC de -63.99 ya que si se agrega sy aumenta a -62.69
+
+
