@@ -1,0 +1,52 @@
+################## Intento 3
+library(car)
+data(Duncan)
+attach(Duncan)
+summary(Duncan)
+Duncan$type<- NULL
+cor(Duncan)
+
+nulo<- lm(prestige~ 1, data = Duncan)
+completo <- lm(prestige~ ., data = Duncan)
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+
+mod1<-lm(formula = prestige ~ education + income, data = Duncan)
+summary(mod1)
+
+# tiene un error estandar pequeño de 13.37
+# el modelo explica el 82% de variabilidad de las variables
+# tiene un p vale menor a 0.05
+# pasan las prubas de t ya que son menores a 0.05
+# lo cual quiere decir las var si aportan al modelo
+
+# 1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de 0.4079 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo si cumple con el supuesto de autocorr porque tiene un p- value de 0.75
+
+# 3. Independencia
+
+dwtest(mod1, alternative = "two.sided")
+#H0: los errores son ndependientes (no rechazar p-value mayor a 0.05)
+# un p value menor a 0.05 o un DW [1.5 , 2.5]
+# en este caso esta en la frontera por lo cual decimos que si cumple
+# porque es de 1.4583 aunque no se encuentre exactamente en el rango
+
+### Interpretacion
+
+# El modelo elegido estima que hay un aumento de 0.54 
+# en el prestigio por cada aumento de 1 unidad de educacion
+# menteniendo contrantes las demas var independientes
+
+
+# El modelo elegido estima que hay un aumento de 0.59
+# en el prestigio por cada aumento de 1 unidad en el ingreso
+# menteniendo contrantes las demas var independientes
