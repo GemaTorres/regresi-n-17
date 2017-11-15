@@ -1,0 +1,91 @@
+library(foreign)
+wdi<- read.csv("/Users/gemaitzeltorresmejia/Downloads/MEX.csv")
+
+# VAR DEP ----- ESP DE VIDA
+#               TASA DE FECUNDIDD 
+#               % HOMBREAS ALFABETAS
+#               % MUJERES ALFABETAS
+#               PORCETAJE DE POBLACION URBANA
+#               NIÑOS ECONOMICAMENTE ACTIVOS
+#               NIÑAS ECONOMICAMENTE ACTIVOS
+#               TASA DE CRECIEMIENTO ANUAL
+# MEXICO, ARGENTINA Y BRASIL
+
+mex<- data.frame( wdi$MEX.FER, wdi$MEX.PIB, wdi$MEX.INFMORT, wdi$MEX.POBUR, wdi$MEX.ESP)
+arg <- data.frame( wdi$ARG.FER, wdi$ARG.PIB, wdi$ARG.INFMORT, wdi$ARG.PBURB, wdi$ARG.ESP)
+bra <- data.frame( wdi$BRA.FER, wdi$BRA.PIB, wdi$BRA.INFMORT, wdi$BRA.POBURB, wdi$BRA.ESP)
+
+mex <- na.omit(mex)
+arg <- na.omit(arg)
+bra <- na.omit(bra)
+
+cor(mex)
+cor(arg)
+cor(bra)
+
+########## MEXICO
+
+nulo<- lm(wdi.MEX.ESP~ 1, data = mex)
+completo <- lm(wdi.MEX.ESP~ ., data = mex)
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+
+modmex1<-lm(formula = wdi.MEX.ESP ~ wdi.MEX.POBUR + wdi.MEX.INFMORT, data = mex)
+summary(modmex1)
+
+
+# tiene un error estandar pequeño de 0.55
+# el modelo explica el 99% de variabilidad de las variables
+# tiene un p vale menor a 0.05 de 0.0002
+# pasan las prubas de t ya que son menores a 0.05 menos la var de pob urbana
+# lo cual quiere decir las var si aportan al modelo
+
+# 1. Normalidad
+shapiro.test(rstudent(modmex1)) # prueba shapiro para normalidad
+# p- value de 0.69 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
+
+
+############# arg
+
+nulo<- lm(wdi.ARG.ESP~ 1, data = arg)
+completo <- lm(wdi.ARG.ESP~ ., data = arg)
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+
+modarg1<-lm(formula = wdi.ARG.ESP ~ wdi.ARG.PBURB + wdi.ARG.FER, data = arg)
+summary(modarg1)
+
+# el mejor modelo es el nulo por lo tanto no hay relacion
+
+# tiene un error estandar pequeño de 0.3054
+# el modelo explica el 98% de variabilidad de las variables
+# tiene un p vale menor a 0.05
+# pasan las prubas de t ya que son menores a 0.05
+# lo cual quiere decir las var si aportan al modelo
+
+# 1. Normalidad
+shapiro.test(rstudent(modarg1)) # prueba shapiro para normalidad
+# p- value de 0.4079 lo cual es mayor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal. de 0.06
+
+
+
+########## Brazil
+
+nulo<- lm(wdi.BRA.ESP~ 1, data = bra)
+completo <- lm(wdi.BRA.ESP~ ., data = bra)
+step(nulo, scope = list(lower=nulo, upper=completo), direction = "forward")
+
+modbra1<-lm(formula = wdi.MEX.ESP ~ wdi.MEX.POBUR + wdi.MEX.INFMORT, data = mex)
+summary(modbra1)
+
+
+# tiene un error estandar pequeño de 0.52
+# el modelo explica el 99% de variabilidad de las variables
+# tiene un p vale menor a 0.05 de 0.0002
+# pasan las prubas de t ya que son menores a 0.05 menos la var de pob urbana
+# lo cual quiere decir las var si aportan al modelo
+
+# 1. Normalidad
+shapiro.test(rstudent(modbra1)) # prueba shapiro para normalidad
+# p- value de 0.00000032 lo cual es menor a 0.05 y no se rechaza H0, 
+# es decir los errores se distribuyen normal.
