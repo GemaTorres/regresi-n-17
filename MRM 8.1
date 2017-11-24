@@ -1,0 +1,91 @@
+########## ejercicio 3 ########
+
+N.cajas<- c(10, 15, 10, 20, 25, 18, 12, 14, 16, 22, 24, 17, 13, 30 ,24)
+Distancia <- c(30, 25, 40, 18, 22, 31, 26, 34, 29, 37, 20, 25, 27, 23, 33)
+Tiempo <- c(24, 27, 29, 31, 25, 33, 26, 28, 31, 39, 33, 30, 25, 42, 40)
+
+estudio <- data.frame(N.cajas, Distancia, Tiempo)
+
+pairs(estudio)
+cor(estudio)
+
+regnull <- lm(Tiempo ~ 1, data =estudio)
+allreg <- lm(Tiempo ~ ., data =estudio)
+
+step(regnull, scope = list(lower=regnull, upper=allreg), direction = "forward")
+mod1 <- lm(formula = Tiempo ~ N.cajas + Distancia, data = estudio)
+summary(mod1)
+
+#1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de .000001 lo cual es menor a 0.05 y  se rechaza H0, 
+# es decir los errores no se distribuyen normal.
+# NO hay normaldad en los residuos
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo si cumple con el supuesto de autocorr ya que tiene un p-value de 0.2669
+
+# 3. Independencia
+
+dwtest(mod1, alternative = "two.sided")
+#H0: los errores son ndependientes (no rechazar p-value mayor a 0.05)
+# un p value menor a 0.05 o un DW [1.5 , 2.5]
+# en este caso esta en la frontera CON 2.6193 y un p-vale de 0.2072
+
+########## CORREGIR NORMALIDAD
+#OUTLIER
+
+install.packages("car")
+require(car)
+outlierTest(allreg, cutoff=0.05, n.max=5, order=T) ### observacion que es atipico
+influencePlot(allreg, id.n=5)
+
+# la observacion 5 es outlier 
+# ahora para confirmar los casos con implicaciones
+# se hace un grafico con distancias cook
+
+mod2<- cooks.distance(allreg)
+mod2 ### la distancias mas grandes son las 5, 14 y 4 pero la 5 es la mayor
+
+install.packages("faraway")
+require(faraway)
+halfnorm(mod2, ylab = "dist cook" ) # DA COMO RESULTADO MAS LEJANO EN LA GRFICA EL 5
+
+############### Quitando la observacion 5
+estudio<-(estudio[-5,])
+
+#1. Normalidad
+shapiro.test(rstudent(mod1)) # prueba shapiro para normalidad
+# p- value de .1944 lo cual es mayor a 0.05 y  no se rechaza H0, 
+# es decir los errores  se distribuyen normal.
+# hay normaldad en los residuos
+
+# 2. Autocorrelacion 
+require(lmtest)
+bptest(mod1) # prueba breusch pagan que permite la autocorrelacion
+# Este modelo nos permite saber que no hay mas de dos variables
+# que aporten lo mismo al modelo
+#H0: no hay mas de dos variables que aporten lo mismo al modelo (no rechazar p-value mayor a 0.05)
+#Este modelo si cumple con el supuesto de autocorr ya que tiene un p-value de 0.5951
+
+# 3. Independencia
+
+dwtest(mod1, alternative = "two.sided")
+#H0: los errores son ndependientes (no rechazar p-value mayor a 0.05)
+# un p value menor a 0.05 o un DW [1.5 , 2.5]
+# en este caso esta en la frontera CON 2.651 y un p-vale de 0.1644
+
+### Interpretacion 
+
+# y= 2.1952+ 1.0031 x1+ 0.3805 x2
+
+# si mantenemos constante la duatncia y aumentamos en una unidad 
+# las cajas entonces aumenta 1.0031 el tiempo
+
+# si mantenemos constante el no de cajas y aumentamos en una unidad 
+# la diatncia entonces uamenta en 0.3805 en el tiempo
