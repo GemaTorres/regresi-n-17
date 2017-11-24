@@ -1,0 +1,56 @@
+# Base
+
+# donde
+# AP: Precio promedio
+# CPC: Consumo por cliente
+
+city<- c("ama", "bor", "dal", "sha", "roy", "tex", "cor", "pal", "mar", "low", "pal"
+         , "mill", "mem", "gran", "lla", "brow", "mer", "kar", "mat", "la pry")
+AP <- c(30, 31, 37, 42, 43, 45, 50, 54, 54, 57, 58, 58 , 60, 73, 88,  89, 92, 97, 100, 102)
+CPC <- c(134, 112, 136, 109, 105, 87, 56, 43, 77, 35, 65, 56, 58, 55, 49, 39, 36, 46, 40, 42)
+prima <- c(200, 205, 198, 315, 211, 310, 200, 306, 245, 287, 298, 264, 255, 306, 315, 222, 244, 158, 166, 216)
+
+# generar 3 modelos con los datos anteriores
+# 1. para cada modelo encuentre el valor de R2 y AIC y genere una grafica residual
+#     Comente sobre la adecuacion de los tres modelos
+
+# var dep precio promedio
+
+mod1 <- lm (AP  ~ CPC)
+summary(mod1)
+AIC(mod1)
+plot(mod1$residuals)
+
+# tiene una R2 de 0.6033
+# AIC 168.77
+
+mod2<- lm (AP  ~ CPC+prima)
+summary(mod2)
+AIC(mod2)
+plot(mod2$residuals)
+
+# grafica de residuales buscamos que no haya patron en la grafica
+# r2 de .6663
+# AIC de 166.16
+
+mod3<- lm (AP  ~ prima)
+summary(mod3)
+AIC(mod3)
+plot(mod3$residuals)
+
+# r2 de -0.02
+# AIC de 187.78
+
+############# El mejor modelo es mod2<- lm (AP  ~ CPC+prima)
+
+#### 2. Para precios de 40, 60, 80, 100 y 120 de CPC y calcule AP utilizando el mejor modelo
+
+predict(mod1, data.frame(CPC= 120), interval = "predict")
+
+# 40 <- 79.39
+# 60 <- 68.08
+# 80 <- 56.78
+# 100 <- 45.47
+# 120 <- 34.17
+
+
